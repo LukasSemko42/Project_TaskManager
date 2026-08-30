@@ -1,9 +1,30 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import com.google.gson.Gson;
+import java.io.*;
 
 public class Main {
     static Scanner input = new Scanner(System.in);
     static ArrayList<Task> tasks = new ArrayList<Task>();
+    public static Gson gson = new Gson();
+
+    public static void saveTasks(){
+        String jsonString = gson.toJson(tasks);
+        try {
+            FileWriter writer = new FileWriter("tasks.json");
+            writer.write(jsonString);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
+        }
+    }
+
+    public static void loadTasks(){
+        File file = new File("tasks.json");
+        if (file.exists()) {
+            // read + parse + assign to tasks
+        }
+    }
 
     public static void addTask(){
         System.out.print("Enter task name: ");
@@ -138,6 +159,7 @@ public class Main {
 
             switch (choice) {
                 case 0:
+                    saveTasks();
                     System.out.println("Exit");
                     running = false;
                     break;
