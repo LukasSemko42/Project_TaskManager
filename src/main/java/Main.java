@@ -2,6 +2,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import com.google.gson.Gson;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
 
 public class Main {
     static Scanner input = new Scanner(System.in);
@@ -22,7 +26,13 @@ public class Main {
     public static void loadTasks(){
         File file = new File("tasks.json");
         if (file.exists()) {
-            // read + parse + assign to tasks
+            try {
+                String jsonString = Files.readString(Path.of("tasks.json"));
+                Type listType = new TypeToken<ArrayList<Task>>(){}.getType();
+                tasks = gson.fromJson(jsonString, listType);
+            } catch (IOException e) {
+                System.out.println("Error loading tasks: " + e.getMessage());
+            }
         }
     }
 
@@ -136,6 +146,7 @@ public class Main {
 
     public static void main(String[] args) {
         boolean running = true;
+        loadTasks();
 
         while(running) {
 
